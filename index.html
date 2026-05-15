@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de Moda - Proyecto</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo-container">
+            <h1 onclick="showSection('catalog')">NAME_STORE</h1>
+        </div>
+
+        <nav class="main-nav">
+            <ul class="nav-links">
+                <li><a href="#" onclick="showSection('catalog')">MUJER</a></li>
+                <li><a href="#" onclick="showSection('catalog')">HOMBRE</a></li>
+                <li><a href="#" onclick="showSection('catalog')">NIÑOS</a></li>
+                <li><a href="#" onclick="showSection('catalog')">BEAUTY</a></li>
+            </ul>
+        </nav>
+
+        <div class="user-actions">
+            <div class="search-bar">
+                <input type="text" placeholder="BUSCAR" id="search-input">
+            </div>
+            <button class="btn-text" onclick="showSection('login')">INICIAR SESIÓN</button>
+            <button class="btn-text" onclick="showSection('orders')">MIS PEDIDOS</button>
+            <button class="btn-cart" onclick="showSection('cart')">
+                CARRITO (<span id="cart-count">0</span>)
+            </button>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+
+        <section id="login" class="view-section">
+            <div class="auth-container">
+                <h2>ACCESO</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="E-MAIL" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" placeholder="CONTRASEÑA" required>
+                    </div>
+                    <button type="submit" class="btn-primary">ENTRAR</button>
+                </form>
+                <div class="auth-switch">
+                    <p>¿NO TIENES CUENTA?</p>
+                    <button class="btn-secondary" onclick="showSection('register')">REGÍSTRATE</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="register" class="view-section" style="display:none;">
+            <div class="auth-container">
+                <h2>REGISTRO</h2>
+                <form id="register-form">
+                    <div class="form-group">
+                        <input type="text" name="nombre" placeholder="NOMBRE COMPLETO" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="E-MAIL" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" placeholder="CONTRASEÑA" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="direccion" placeholder="DIRECCIÓN DE ENVÍO"></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">CREAR CUENTA</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="catalog" class="view-section" style="display:none;">
+            <div class="catalog-header">
+                <span class="results-count">PRODUCTOS (24)</span>
+                <div class="filters">
+                    <span>FILTROS +</span>
+                </div>
+            </div>
+
+            <div class="products-grid">
+                <article class="product-card">
+                    <div class="product-image">
+                        <img src="" alt="Producto">
+                        <button class="add-quick">AÑADIR</button>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">CHAMARRA ESTRUCTURA</h3>
+                        <span class="product-price">1.299,00 MXN</span>
+                    </div>
+                </article>
+
+                </div>
+        </section>
+
+        <section id="cart" class="view-section" style="display:none;">
+            <div class="cart-container">
+                <h2>CESTA</h2>
+                <div class="cart-layout">
+                    <div class="cart-items-list">
+                        <div class="cart-item">
+                            <div class="item-img"></div>
+                            <div class="item-details">
+                                <div class="item-header">
+                                    <h4>NOMBRE DEL PRODUCTO</h4>
+                                    <button class="remove-item">ELIMINAR</button>
+                                </div>
+                                <p class="item-ref">REF. 1234/567</p>
+                                <div class="item-controls">
+                                    <div class="qty-selector">
+                                        <button>-</button>
+                                        <span>1</span>
+                                        <button>+</button>
+                                    </div>
+                                    <span class="item-price">899,00 MXN</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <aside class="cart-summary">
+                        <h3>RESUMEN</h3>
+                        <div class="summary-line">
+                            <span>SUBTOTAL</span>
+                            <span>899,00 MXN</span>
+                        </div>
+                        <div class="summary-line">
+                            <span>ENVÍO</span>
+                            <span>GRATIS</span>
+                        </div>
+                        <div class="summary-total">
+                            <span>TOTAL</span>
+                            <span>899,00 MXN</span>
+                        </div>
+                        <button class="btn-checkout">TRAMITAR PEDIDO</button>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section id="orders" class="view-section" style="display:none;">
+            <div class="orders-container">
+                <h2>MIS COMPRAS</h2>
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Nº PEDIDO</th>
+                            <th>FECHA</th>
+                            <th>ESTADO</th>
+                            <th>TOTAL</th>
+                            <th>DETALLE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#100456</td>
+                            <td>12/10/2023</td>
+                            <td>ENTREGADO</td>
+                            <td>2.450,00 MXN</td>
+                            <td><button class="btn-link">VER +</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-sections">
+            <div class="footer-col">
+                <h4>AYUDA</h4>
+                <ul>
+                    <li>Mi Cuenta</li>
+                    <li>Envíos</li>
+                    <li>Pagos</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>SÍGUENOS</h4>
+                <ul>
+                    <li>Instagram</li>
+                    <li>Facebook</li>
+                    <li>TikTok</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 NAME_STORE. TODOS LOS DERECHOS RESERVADOS.</p>
+        </div>
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            // Oculta todas las secciones
+            document.querySelectorAll('.view-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            // Muestra la seleccionada
+            document.getElementById(sectionId).style.display = 'block';
+            window.scrollTo(0,0);
+        }
+
+        // Mostrar catálogo por defecto al cargar
+        window.onload = () => showSection('catalog');
+    </script>
+</body>
+</html>
