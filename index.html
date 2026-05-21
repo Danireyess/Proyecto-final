@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda</title>
+    <title>Bluey</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header class="main-header">
         <div class="logo-container">
-            <h1 onclick="showSection('catalog')">Bluey</h1>
+            <h1 onclick="showSection('home')">Bluey</h1>
         </div>
 
         <nav class="main-nav">
             <ul class="nav-links">
-                <li><a href="#" onclick="showSection('catalog')">MUJER</a></li>
-                <li><a href="#" onclick="showSection('catalog')">HOMBRE</a></li>
-                <li><a href="#" onclick="showSection('catalog')">NIÑOS</a></li>
-                <li><a href="#" onclick="showSection('catalog')">BEAUTY</a></li>
+                <li><a href="#" onclick="filterByCategory('mujer')">MUJER</a></li>
+                <li><a href="#" onclick="filterByCategory('hombre')">HOMBRE</a></li>
+                <li><a href="#" onclick="filterByCategory('niños')">NIÑOS</a></li>
+                <li><a href="#" onclick="filterByCategory('beauty')">BEAUTY</a></li>
+                <li id="nav-admin" style="display: none;"><a href="#" onclick="showSection('admin-dashboard')" style="color: #7a7a7a; font-weight: 600;">PANEL ADMIN</a></li>
             </ul>
         </nav>
 
@@ -26,9 +27,9 @@
             <div class="search-bar">
                 <input type="text" placeholder="BUSCAR" id="search-input">
             </div>
-            <button class="btn-text" onclick="showSection('login')">INICIAR SESIÓN</button>
-            <button class="btn-text" onclick="showSection('orders')">MIS PEDIDOS</button>
-            <button class="btn-cart" onclick="showSection('cart')">
+            <button class="btn-text" id="btn-session" onclick="handleSessionBtn()">INICIAR SESIÓN</button>
+            <button class="btn-text" id="btn-orders-nav" onclick="showSection('orders')">MIS PEDIDOS</button>
+            <button class="btn-cart" id="btn-cart-nav" onclick="showSection('cart')">
                 CARRITO (<span id="cart-count">0</span>)
             </button>
         </div>
@@ -36,7 +37,54 @@
 
     <main class="content-wrapper">
 
-        <section id="login" class="view-section">
+        <section id="home" class="view-section" style="display:none;">
+            <div class="hero">
+                <div class="hero-bg">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&auto=format&fit=crop&q=80" alt="Bluey colección">
+                </div>
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <h2>Nueva Colección</h2>
+                    <p>Primavera — Verano 2025</p>
+                    <button class="btn-hero" onclick="showSection('catalog')">VER COLECCIÓN</button>
+                </div>
+            </div>
+
+            <div class="home-categories">
+                <div class="cat-card" onclick="filterByCategory('mujer')">
+                    <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&auto=format&fit=crop&q=80" alt="Mujer">
+                    <div class="cat-card-overlay"><span class="cat-card-label">Mujer</span></div>
+                </div>
+                <div class="cat-card" onclick="filterByCategory('hombre')">
+                    <img src="https://images.unsplash.com/photo-1488161628813-04466f872be2?w=600&auto=format&fit=crop&q=80" alt="Hombre">
+                    <div class="cat-card-overlay"><span class="cat-card-label">Hombre</span></div>
+                </div>
+                <div class="cat-card" onclick="filterByCategory('niños')">
+                    <img src="https://images.unsplash.com/photo-1503919005314-30d93d07d823?w=600&auto=format&fit=crop&q=80" alt="Niños">
+                    <div class="cat-card-overlay"><span class="cat-card-label">Niños</span></div>
+                </div>
+                <div class="cat-card" onclick="filterByCategory('beauty')">
+                    <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&auto=format&fit=crop&q=80" alt="Beauty">
+                    <div class="cat-card-overlay"><span class="cat-card-label">Beauty</span></div>
+                </div>
+            </div>
+
+            <div class="home-featured">
+                <h2 class="section-title">Lo Más Nuevo</h2>
+                <div class="featured-grid" id="featured-grid"></div>
+            </div>
+
+            <div class="home-banner" onclick="filterByCategory('beauty')">
+                <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1400&auto=format&fit=crop&q=80" alt="Beauty">
+                <div class="home-banner-overlay"></div>
+                <div class="home-banner-content">
+                    <h3>Beauty</h3>
+                    <span>Descubrir →</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="login" class="view-section" style="display:none;">
             <div class="auth-container">
                 <h2>ACCESO</h2>
                 <form id="login-form">
@@ -71,6 +119,12 @@
                     <div class="form-group">
                         <textarea name="direccion" placeholder="DIRECCIÓN DE ENVÍO"></textarea>
                     </div>
+                    <div class="form-group">
+                        <select name="rol" id="register-rol" style="width: 100%; padding: 12px; font-size: 11px; letter-spacing: 0.1em; border: 1px solid var(--gray-100); background: transparent; font-family: var(--font-sans); text-transform: uppercase;">
+                            <option value="cliente">Deseo ser Cliente</option>
+                            <option value="admin">Deseo ser Administrador</option>
+                        </select>
+                    </div>
                     <button type="submit" class="btn-primary">CREAR CUENTA</button>
                 </form>
             </div>
@@ -78,67 +132,23 @@
 
         <section id="catalog" class="view-section" style="display:none;">
             <div class="catalog-header">
-                <span class="results-count">PRODUCTOS (24)</span>
-                <div class="filters">
-                    <span>Filtros</span>
-                </div>
+                <span class="results-count" id="results-count">PRODUCTOS (0)</span>
+                <div class="filters"><span>Filtros</span></div>
             </div>
-
-            <div class="products-grid">
-                <article class="product-card">
-                    <div class="product-image">
-                        <img src="" alt="Producto">
-                        <button class="add-quick">AÑADIR</button>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name">CHAMARRA ESTRUCTURA</h3>
-                        <span class="product-price">1.299,00 MXN</span>
-                    </div>
-                </article>
-
-                </div>
+            <div class="products-grid" id="products-grid"></div>
         </section>
 
         <section id="cart" class="view-section" style="display:none;">
             <div class="cart-container">
                 <h2>CESTA</h2>
                 <div class="cart-layout">
-                    <div class="cart-items-list">
-                        <div class="cart-item">
-                            <div class="item-img"></div>
-                            <div class="item-details">
-                                <div class="item-header">
-                                    <h4>NOMBRE DEL PRODUCTO</h4>
-                                    <button class="remove-item">ELIMINAR</button>
-                                </div>
-                                <p class="item-ref">REF. 1234/567</p>
-                                <div class="item-controls">
-                                    <div class="qty-selector">
-                                        <button>-</button>
-                                        <span>1</span>
-                                        <button>+</button>
-                                    </div>
-                                    <span class="item-price">899,00 MXN</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                    <div class="cart-items-list" id="cart-items-list"></div>
                     <aside class="cart-summary">
                         <h3>RESUMEN</h3>
-                        <div class="summary-line">
-                            <span>SUBTOTAL</span>
-                            <span>899,00 MXN</span>
-                        </div>
-                        <div class="summary-line">
-                            <span>ENVÍO</span>
-                            <span>GRATIS</span>
-                        </div>
-                        <div class="summary-total">
-                            <span>TOTAL</span>
-                            <span>899,00 MXN</span>
-                        </div>
-                        <button class="btn-checkout">TRAMITAR PEDIDO</button>
+                        <div class="summary-line"><span>SUBTOTAL</span><span id="cart-subtotal">0,00 MXN</span></div>
+                        <div class="summary-line"><span>ENVÍO</span><span>GRATIS</span></div>
+                        <div class="summary-total"><span>TOTAL</span><span id="cart-total">0,00 MXN</span></div>
+                        <button class="btn-checkout" onclick="checkout()">TRAMITAR PEDIDO</button>
                     </aside>
                 </div>
             </div>
@@ -146,26 +156,63 @@
 
         <section id="orders" class="view-section" style="display:none;">
             <div class="orders-container">
-                <h2>MIS COMPRAS</h2>
+                <h2 id="orders-title">MIS COMPRAS</h2>
                 <table class="orders-table">
                     <thead>
                         <tr>
                             <th>Nº PEDIDO</th>
+                            <th id="th-cliente" style="display:none;">CLIENTE</th>
                             <th>FECHA</th>
                             <th>ESTADO</th>
                             <th>TOTAL</th>
                             <th>DETALLE</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="orders-tbody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="admin-dashboard" class="view-section" style="display:none; padding:20px;">
+            <div class="orders-container">
+                <h2>PANEL DE CONTROL — ADMINISTRADOR</h2>
+                
+                <div style="background:#f5f5f5; padding:25px; margin-bottom:40px; border:1px solid #ebebeb;">
+                    <h3 style="font-size:12px; letter-spacing:0.1em; margin-bottom:15px;">AÑADIR NUEVO PRODUCTO AL CATÁLOGO</h3>
+                    <form id="admin-add-product-form" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:15px; align-items:end;">
+                        <div>
+                            <label style="font-size:9px; color:#7a7a7a;">NOMBRE</label>
+                            <input type="text" id="admin-p-name" required style="width:100%; padding:8px; border:1px solid #ccc;">
+                        </div>
+                        <div>
+                            <label style="font-size:9px; color:#7a7a7a;">PRECIO (MXN)</label>
+                            <input type="number" id="admin-p-price" required style="width:100%; padding:8px; border:1px solid #ccc;">
+                        </div>
+                        <div>
+                            <label style="font-size:9px; color:#7a7a7a;">CATEGORÍA</label>
+                            <select id="admin-p-category" style="width:100%; padding:8px; border:1px solid #ccc;">
+                                <option value="mujer">MUJER</option>
+                                <option value="hombre">HOMBRE</option>
+                                <option value="niños">NIÑOS</option>
+                                <option value="beauty">BEAUTY</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary" style="padding:10px; font-size:10px;">PROCESAR ALTA</button>
+                    </form>
+                </div>
+
+                <h3>PRODUCTOS EN EXISTENCIA</h3>
+                <table class="orders-table">
+                    <thead>
                         <tr>
-                            <td>#100456</td>
-                            <td>12/10/2023</td>
-                            <td>ENTREGADO</td>
-                            <td>2.450,00 MXN</td>
-                            <td><button class="btn-link">VER +</button></td>
+                            <th>ID</th>
+                            <th>CATEGORÍA</th>
+                            <th>ARTÍCULO</th>
+                            <th>PRECIO</th>
+                            <th>ACCIONES</th>
                         </tr>
-                    </tbody>
+                    </thead>
+                    <tbody id="admin-products-tbody"></tbody>
                 </table>
             </div>
         </section>
@@ -176,39 +223,18 @@
         <div class="footer-sections">
             <div class="footer-col">
                 <h4>AYUDA</h4>
-                <ul>
-                    <li>Mi Cuenta</li>
-                    <li>Envíos</li>
-                    <li>Pagos</li>
-                </ul>
+                <ul><li>Mi Cuenta</li><li>Envíos</li><li>Pagos</li></ul>
             </div>
             <div class="footer-col">
                 <h4>SÍGUENOS</h4>
-                <ul>
-                    <li>Instagram</li>
-                    <li>Facebook</li>
-                    <li>TikTok</li>
-                </ul>
+                <ul><li>Instagram</li><li>Facebook</li><li>TikTok</li></ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2023 Bluey. TODOS LOS DERECHOS RESERVADOS.</p>
+            <p>&copy; 2026 Bluey. TODOS LOS DERECHOS RESERVADOS.</p>
         </div>
     </footer>
 
-    <script>
-        function showSection(sectionId) {
-            // Oculta todas las secciones
-            document.querySelectorAll('.view-section').forEach(section => {
-                section.style.display = 'none';
-            });
-            // Muestra la seleccionada
-            document.getElementById(sectionId).style.display = 'block';
-            window.scrollTo(0,0);
-        }
-
-        // Mostrar catálogo por defecto al cargar
-        window.onload = () => showSection('catalog');
-    </script>
+    <script src="App.js"></script>
 </body>
 </html>
